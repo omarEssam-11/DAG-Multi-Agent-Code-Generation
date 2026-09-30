@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DAG Studio — Dynamic Multi-Agent Code Generation</title>
+  <link rel="stylesheet" href="/ui/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
+</head>
+<body>
+  <header id="topbar">
+    <div class="brand">
+      <span class="brand-icon">⚡</span>
+      <div class="brand-text">
+        <strong>DAG Studio</strong>
+        <span>Dynamic Multi-Agent Code Generation</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span id="conn-dot" class="conn offline" title="connection"></span>
+      <span id="mode-badge" class="badge">…</span>
+      <span id="model-label" class="model-label"></span>
+      <div id="stats" class="stats hidden">
+        <span id="stat-wave"></span>
+        <span id="stat-done"></span>
+      </div>
+      <button id="stop-btn" class="btn danger hidden">■ Stop</button>
+    </div>
+  </header>
+
+  <main id="layout">
+    <!-- ---------------------------------------------------------- left: query -->
+    <aside id="left" class="col">
+      <section class="panel" id="query-panel">
+        <h2>Mission Control</h2>
+        <textarea id="query-input" rows="4"
+          placeholder="Describe the software to build… e.g. “Build a todo app with dark mode and localStorage persistence”"></textarea>
+        <div id="examples"></div>
+        <button id="run-btn" class="btn primary big">▶ Generate with DAG</button>
+      </section>
+
+      <section class="panel grow" id="agents-panel">
+        <h2>Agents <span id="agents-count" class="pill">0</span></h2>
+        <div id="agents-list" class="agents-list">
+          <p class="muted">No agents yet — run a query to spawn the planner.</p>
+        </div>
+      </section>
+    </aside>
+
+    <!-- ------------------------------------------------------- center: graph -->
+    <section id="center" class="col">
+      <div class="panel" id="dag-panel">
+        <div class="dag-toolbar">
+          <h2>Task DAG</h2>
+          <div class="legend">
+            <span><i class="dot pending"></i>pending</span>
+            <span><i class="dot running"></i>running</span>
+            <span><i class="dot done"></i>done</span>
+            <span><i class="dot failed"></i>failed</span>
+            <span><i class="dot skipped"></i>skipped</span>
+          </div>
+          <div class="zoom-controls">
+            <button id="zoom-out" title="zoom out">−</button>
+            <button id="zoom-fit" title="fit to view">⤢</button>
+            <button id="zoom-in" title="zoom in">+</button>
+          </div>
+        </div>
+        <div id="dag-scroll">
+          <svg id="dag-svg" xmlns="http://www.w3.org/2000/svg">
+            <g id="viewport"></g>
+          </svg>
+          <div id="dag-empty">
+            <div class="empty-icon">🕸️</div>
+            <p>Submit a query and the planner agent will decompose it into a DAG.<br/>
+            Independent tasks run <em>concurrently</em>; dependents wait for their inputs.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" id="bottom-panel">
+        <div class="tabs">
+          <button class="tab active" data-tab="details">Node Details</button>
+          <button class="tab" data-tab="artifacts">Artifacts <span id="art-count" class="pill">0</span></button>
+          <button class="tab" data-tab="summary">Run Summary</button>
+        </div>
+        <div id="tab-details" class="tab-page active">
+          <div id="node-detail"><p class="muted">Select a node in the graph to inspect its live logs and output.</p></div>
+        </div>
+        <div id="tab-artifacts" class="tab-page">
+          <div id="artifacts-wrap">
+            <div id="artifacts-list"><p class="muted">No artifacts yet.</p></div>
+            <pre id="artifacts-view" class="hidden"></pre>
+          </div>
+        </div>
+        <div id="tab-summary" class="tab-page">
+          <div id="run-summary"><p class="muted">No run yet.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ------------------------------------------------------ right: event log -->
+    <aside id="right" class="col">
+      <section class="panel grow" id="log-panel">
+        <h2>Event Log</h2>
+        <div id="event-log"></div>
+      </section>
+    </aside>
+  </main>
+
+  <div id="toast" class="hidden"></div>
+  <script src="/ui/app.js"></script>
+</body>
+</html>
